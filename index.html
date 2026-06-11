@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Votação — Gala O Gordo Vai À Baliza</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:   #0a0a0a;
+    --dark:    #111111;
+    --card:    #181818;
+    --border:  #2a2a2a;
+    --gold:    #c9a84c;
+    --gold-lt: #e8c97a;
+    --red:     #b03030;
+    --red-lt:  #d45050;
+    --white:   #f0ece3;
+    --gray:    #888880;
+    --green:   #1a4d2a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #0e0e0e 0%, #0a1a0f 60%, #0e0e0e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 20%, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-trophy {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 18px;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+
+  /* ── INTRO CARD ── */
+  .intro-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    text-align: left;
+    position: relative;
+  }
+  .intro-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 12px 12px 0 0;
+  }
+  .intro-card p {
+    color: #c8c4bb;
+    font-size: 14px;
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .intro-card p:last-child { margin-bottom: 0; }
+  .intro-card .sign {
+    margin-top: 20px;
+    font-style: italic;
+    color: var(--gray);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+  /* ── BADGES ── */
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 32px 24px 0;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--gray);
+  }
+  .badge span { font-size: 16px; }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0 32px;
+  }
+  .section-divider .label {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+  .section-divider .label.gold { color: var(--gold); }
+  .section-divider .label.red  { color: var(--red-lt); }
+  .section-divider .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-divider .icon { font-size: 22px; }
+
+  /* ── AWARD CARD ── */
+  .award-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .award-card:focus-within { border-color: #3a3a3a; }
+
+  .award-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  .award-accent {
+    width: 4px;
+    flex-shrink: 0;
+    border-radius: 16px 0 0 0;
+  }
+  .accent-gold { background: var(--gold); }
+  .accent-red  { background: var(--red-lt); }
+
+  .award-header-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 22px 20px 20px;
+    flex: 1;
+  }
+
+  .player-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    flex-shrink: 0;
+    background: #222;
+    border: 2px solid var(--border);
+  }
+  .player-photo-fallback {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #1e1e1e;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .award-meta { flex: 1; min-width: 0; }
+  .award-num {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 3px;
+  }
+  .award-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .award-name.gold { color: var(--gold-lt); }
+  .award-name.red  { color: #e87878; }
+  .award-title {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+  }
+  .award-inspired {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+
+  .award-body { padding: 0 22px 22px 22px; }
+
+  .award-desc {
+    font-size: 13.5px;
+    color: #b0ab9f;
+    line-height: 1.65;
+    margin-bottom: 20px;
+    padding-top: 4px;
+  }
+
+  /* ── QUESTION LABELS ── */
+  .q-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .q-note {
+    font-size: 11px;
+    color: var(--gray);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  /* ── CHECKBOXES ── */
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .player-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e1e1e;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .player-check:hover { background: #252525; border-color: #3a3a3a; }
+  .player-check input[type="checkbox"] { display: none; }
+  .player-check.selected {
+    background: rgba(201,168,76,0.08);
+    border-color: var(--gold);
+  }
+  .player-check.selected.red-theme {
+    background: rgba(176,48,48,0.1);
+    border-color: var(--red-lt);
+  }
+  .check-box {
+    width: 17px; height: 17px;
+    border-radius: 4px;
+    border: 1.5px solid #444;
+    background: #111;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-size: 10px;
+  }
+  .player-check.selected .check-box {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+  }
+  .player-check.selected.red-theme .check-box {
+    background: var(--red-lt);
+    border-color: var(--red-lt);
+  }
+  .check-name {
+    font-size: 12.5px;
+    color: #ccc;
+    line-height: 1.3;
+  }
+  .player-check.selected .check-name { color: var(--white); }
+
+  .max-hint {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: -14px;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+
+  /* ── JUSTIFICATION ── */
+  .justif-label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  textarea {
+    width: 100%;
+    background: #141414;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 70px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea:focus { border-color: #555; }
+  textarea::placeholder { color: #444; }
+
+  /* ── SUBMIT ── */
+  .submit-section {
+    margin-top: 48px;
+    text-align: center;
+  }
+  .submit-warn {
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: #c8c4bb;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .submit-warn strong { color: var(--gold-lt); }
+
+  .btn-submit {
+    background: var(--gold);
+    color: #000;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 48px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-transform: uppercase;
+  }
+  .btn-submit:hover { background: var(--gold-lt); transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* ── SUCCESS ── */
+  #success-screen {
+    display: none;
+    max-width: 600px;
+    margin: 80px auto;
+    text-align: center;
+    padding: 0 24px;
+  }
+  #success-screen .trophy { font-size: 64px; margin-bottom: 20px; display: block; }
+  #success-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  #success-screen p { color: #aaa; font-size: 14px; line-height: 1.7; }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  .progress-text {
+    font-size: 11px;
+    color: var(--gray);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .award-header-inner { gap: 14px; }
+    .player-photo, .player-photo-fallback { width: 56px; height: 56px; }
+    .players-grid { grid-template-columns: 1fr 1fr; }
+    .intro-card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-trophy">🏆</span>
+  <h1>Gala O Gordo Vai À Baliza</h1>
+  <div class="hero-sub">4ª Edição Oficial · Votação de Nomeados</div>
+
+  <div class="intro-card">
+    <p>Caros atletas,</p>
+    <p>Mais uma gala e mais uma voltinha. Nesta nossa <strong style="color:var(--gold-lt)">4ª Gala Oficial "O Gordo Vai à Baliza"</strong> de fim da época, trazemos os já conhecidos óscares do Gordo. Desta vez, temos <strong style="color:var(--gold-lt)">14 categorias</strong> nas quais queremos premear os nossos incríveis atletas com alusão a lendas do futebol internacional.</p>
+    <p>Assim, para chegarmos a uma lista final pedimos que votem nas seguintes categorias e pedimos também que <strong style="color:var(--gold-lt)">apenas votem uma vez</strong> para não enviesarmos os resultados finais. Para cada prémio, seleccionem até <strong style="color:var(--gold-lt)">3 jogadores</strong> que acham que merecem a nomeação, e justifiquem com uma frase — serão lidas na cerimónia. Prometemos a apresentação dos resultados para cada categoria.</p>
+    <div class="sign">Sem mais,<br><em>A Comissão</em></div>
+  </div>
+</div>
+
+<div class="badge-row">
+  <div class="badge"><span>🏅</span> 14 Prémios</div>
+  <div class="badge"><span>👥</span> Shortlist de 3 por prémio</div>
+  <div class="badge"><span>🗳️</span> Votação ao vivo na gala</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0 / 14 preenchidos</div>
+</div>
+
+<!-- FORM -->
+<main>
+<form id="votingForm" novalidate>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECÇÃO 1: PRÉMIOS DE MÉRITO               -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-divider">
+  <span class="icon">🏆</span>
+  <span class="label gold">Prémios de Mérito</span>
+  <div class="line"></div>
+</div>
+
+<!-- AWARD 1: BUFFON -->
+<div class="award-card" id="card-1">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Buffon_Euro_2016.jpg/440px-Buffon_Euro_2016.jpg" alt="Buffon" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🧤</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 01</div>
+        <div class="award-name gold">Prémio Buffon</div>
+        <div class="award-title">Melhor Guarda-Redes</div>
+        <div class="award-inspired">Inspirado em Gianluigi Buffon</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Aquele que ficou entre os postes e salvou o insalvável. Reflexos felinos, punhos de aço e uma presença que intimida qualquer atacante. O pilar inabalável da equipa.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="1" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_1" placeholder="Porque é que o teu nomeado merece o Prémio Buffon?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 2: MALDINI -->
+<div class="award-card" id="card-2">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Paolo_Maldini.jpg/440px-Paolo_Maldini.jpg" alt="Maldini" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🛡️</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 02</div>
+        <div class="award-name gold">Prémio Maldini</div>
+        <div class="award-title">Melhor Defesa</div>
+        <div class="award-inspired">Inspirado em Paolo Maldini</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Lê o jogo antes de todos. Nunca entra em pânico, nunca perde a cabeça. A elegância defensiva personificada — rouba a bola sem que ninguém perceba como.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="2" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_2" placeholder="Porque é que o teu nomeado merece o Prémio Maldini?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 3: XAVI -->
+<div class="award-card" id="card-3">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Xavi_Hernandez_2018.jpg/440px-Xavi_Hernandez_2018.jpg" alt="Xavi" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🎯</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 03</div>
+        <div class="award-name gold">Prémio Xavi</div>
+        <div class="award-title">Melhor Passador / Mais Criativo</div>
+        <div class="award-inspired">Inspirado em Xavi Hernández</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">O dono do meio-campo. Sabe sempre onde está a bola, onde vai estar, e para onde deve ir. Com ele, o jogo parece fácil — porque para ele, é.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="3" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_3" placeholder="Porque é que o teu nomeado merece o Prémio Xavi?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 4: HAALAND -->
+<div class="award-card" id="card-4">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Erling_Haaland_2023.jpg/440px-Erling_Haaland_2023.jpg" alt="Haaland" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">⚽</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 04</div>
+        <div class="award-name gold">Prémio Haaland</div>
+        <div class="award-title">Melhor Marcador</div>
+        <div class="award-inspired">Inspirado em Erling Haaland</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Golo atrás de golo. Dentro da área é uma máquina imparável. O homem que não sabe o que é falhar — ou pelo menos, nega-o categoricamente.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="4" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_4" placeholder="Porque é que o teu nomeado merece o Prémio Haaland?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 5: KANTÉ -->
+<div class="award-card" id="card-5">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/N%27Golo_Kant%C3%A9_2019.jpg/440px-N%27Golo_Kant%C3%A9_2019.jpg" alt="Kanté" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🏃</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 05</div>
+        <div class="award-name gold">Prémio Kanté</div>
+        <div class="award-title">Mais Trabalhador</div>
+        <div class="award-inspired">Inspirado em N'Golo Kanté</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Está em todo o lado. Sempre. No ataque, na defesa, no intervalo, provavelmente na balneário dos adversários. O motor inoxidável que nunca para.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="5" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_5" placeholder="Porque é que o teu nomeado merece o Prémio Kanté?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 6: GERRARD -->
+<div class="award-card" id="card-6">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Steven_Gerrard_2015.jpg/440px-Steven_Gerrard_2015.jpg" alt="Gerrard" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">👑</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 06</div>
+        <div class="award-name gold">Prémio Gerrard</div>
+        <div class="award-title">Melhor Capitão / Líder</div>
+        <div class="award-inspired">Inspirado em Steven Gerrard</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Lidera com palavras e com exemplo. Quando as coisas apertam, é o primeiro a aparecer. A voz que organiza, motiva e puxa a equipa quando ninguém mais quer.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="6" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_6" placeholder="Porque é que o teu nomeado merece o Prémio Gerrard?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 7: PIRLO -->
+<div class="award-card" id="card-7">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Andrea_Pirlo_2013.jpg/440px-Andrea_Pirlo_2013.jpg" alt="Pirlo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">⭐</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 07</div>
+        <div class="award-name gold">Prémio Pirlo</div>
+        <div class="award-title">O Mais Elegante</div>
+        <div class="award-inspired">Inspirado em Andrea Pirlo</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Nunca parece ter pressa. Domina a bola como se o jogo fosse um passeio de domingo. Enquanto os outros suam, ele... simplesmente existe. Com estilo.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="7" data-max="3" data-theme="gold"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_7" placeholder="Porque é que o teu nomeado merece o Prémio Pirlo?"></textarea>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECÇÃO 2: PRÉMIOS DE HUMOR                -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section-divider">
+  <span class="icon">😂</span>
+  <span class="label red">Prémios de Humor</span>
+  <div class="line"></div>
+</div>
+
+<!-- AWARD 8: NEYMAR -->
+<div class="award-card" id="card-8">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Neymar_da_Silva_Santos_J%C3%BAnior_2019.jpg/440px-Neymar_da_Silva_Santos_J%C3%BAnior_2019.jpg" alt="Neymar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🎭</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 08</div>
+        <div class="award-name red">Prémio Neymar</div>
+        <div class="award-title">Melhor Actor de Lesões</div>
+        <div class="award-inspired">Inspirado em Neymar Jr.</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Cai em câmara lenta, sofre em Dolby Surround, e está de volta ao activo 10 segundos depois. Uma performance digna de Oscar. A FIFA devia ter uma categoria só para ele.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="8" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_8" placeholder="Descreve a melhor performance de lesão do teu nomeado..."></textarea>
+  </div>
+</div>
+
+<!-- AWARD 9: BALOTELLI -->
+<div class="award-card" id="card-9">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mario_Balotelli_2019.jpg/440px-Mario_Balotelli_2019.jpg" alt="Balotelli" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">⚡</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 09</div>
+        <div class="award-name red">Prémio Balotelli</div>
+        <div class="award-title">Mais Imprevisível</div>
+        <div class="award-inspired">Inspirado em Mario Balotelli</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Pode ser genial ou um desastre — e nunca se sabe qual dos dois aparece. Capaz do golo do século e do passe mais absurdo em dois minutos. Entreter, isso sabe.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="9" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_9" placeholder="Qual foi o momento mais inexplicável do teu nomeado esta época?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 10: RAMOS -->
+<div class="award-card" id="card-10">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Sergio_Ramos_2018.jpg/440px-Sergio_Ramos_2018.jpg" alt="Ramos" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🟥</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 10</div>
+        <div class="award-name red">Prémio Ramos</div>
+        <div class="award-title">Mais Agressivo / Mais Cartões</div>
+        <div class="award-inspired">Inspirado em Sergio Ramos</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Entra, derruba, sorri. Tem uma colecção de cartões que seria inveja de qualquer filatélico. A falta mais bonita do campo — mesmo que o árbitro não concorde.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="10" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_10" placeholder="Descreve a falta mais memorável do teu nomeado..."></textarea>
+  </div>
+</div>
+
+<!-- AWARD 11: ROBBEN -->
+<div class="award-card" id="card-11">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Arjen_Robben_2018_%28cropped%29.jpg/440px-Arjen_Robben_2018_%28cropped%29.jpg" alt="Robben" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">↩️</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 11</div>
+        <div class="award-name red">Prémio Robben</div>
+        <div class="award-title">Mais Previsível</div>
+        <div class="award-inspired">Inspirado em Arjen Robben</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Corta para dentro. Sempre. Toda a gente sabe. O adversário sabe. O árbitro sabe. O avô em casa a ver sabe. E mesmo assim funciona — o que diz tudo sobre os adversários.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="11" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_11" placeholder="Qual é o movimento que o teu nomeado repete até à exaustão?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 12: POGBA -->
+<div class="award-card" id="card-12">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Paul_Pogba_2018.jpg/440px-Paul_Pogba_2018.jpg" alt="Pogba" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🙅</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 12</div>
+        <div class="award-name red">Prémio Pogba</div>
+        <div class="award-title">Rei das Desculpas</div>
+        <div class="award-inspired">Inspirado em Paul Pogba</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Nunca é culpa dele. Foi o relvado. Foi o sol. Foi o joelho. Foi o colega que não percebeu a jogada. Tem uma desculpa pronta para cada situação — e conta-as com convicção total.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="12" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_12" placeholder="Qual foi a desculpa mais criativa do teu nomeado esta época?"></textarea>
+  </div>
+</div>
+
+<!-- AWARD 13: SINAMA PONGOLLE -->
+<div class="award-card" id="card-13">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Florent_Sinama_Pongolle.jpg/440px-Florent_Sinama_Pongolle.jpg" alt="Sinama Pongolle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">🔥</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 13</div>
+        <div class="award-name red">Prémio Sinama Pongolle</div>
+        <div class="award-title">Mais Remates, Menos Golos</div>
+        <div class="award-inspired">Inspirado em Florent Sinama Pongolle</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">A finalização é um conceito que continua a evitar. Remata muito — mas a baliza parece ter um campo magnético que repele as bolas. O esforço é louvável. Os resultados... menos.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="13" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_13" placeholder="Descreve o remate mais trágico do teu nomeado..."></textarea>
+  </div>
+</div>
+
+<!-- AWARD 14: MOURINHO -->
+<div class="award-card" id="card-14">
+  <div class="award-header">
+    <div class="award-accent accent-red"></div>
+    <div class="award-header-inner">
+      <img class="player-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Jose_Mourinho_2019.jpg/440px-Jose_Mourinho_2019.jpg" alt="Mourinho" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <div class="player-photo-fallback" style="display:none">😤</div>
+      <div class="award-meta">
+        <div class="award-num">Prémio 14</div>
+        <div class="award-name red">Prémio Mourinho</div>
+        <div class="award-title">Melhor Reclamador</div>
+        <div class="award-inspired">Inspirado em José Mourinho</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">O árbitro está comprado. O relvado está mau. O sol estava nos olhos. Os adversários não jogam bem, só têm sorte. Reclama com classe, com estilo, e com uma coerência admirável.</div>
+    <div class="q-label">Nomeia até 3 jogadores</div>
+    <div class="q-note">Quem merece este prémio esta época?</div>
+    <div class="players-grid" data-award="14" data-max="3" data-theme="red"></div>
+    <div class="max-hint">Máximo de 3 selecções</div>
+    <div class="justif-label">✍️ Justificação (1 frase — será lida na gala)</div>
+    <textarea name="just_14" placeholder="Com o quê é que o teu nomeado mais reclama?"></textarea>
+  </div>
+</div>
+
+<!-- SUGGESTIONS -->
+<div class="section-divider">
+  <span class="icon">💡</span>
+  <span class="label gold">Sugestões</span>
+  <div class="line"></div>
+</div>
+
+<div class="award-card" id="card-suggestions">
+  <div class="award-header">
+    <div class="award-accent accent-gold"></div>
+    <div class="award-header-inner">
+      <div class="player-photo-fallback">💬</div>
+      <div class="award-meta">
+        <div class="award-num">Bónus</div>
+        <div class="award-name gold">Caixa de Sugestões</div>
+        <div class="award-title">Para a Comissão — anónimo</div>
+        <div class="award-inspired">Tudo o que quiseres dizer</div>
+      </div>
+    </div>
+  </div>
+  <div class="award-body">
+    <div class="award-desc">Tens alguma sugestão para a Gala, para a época, para o grupo, ou para algum colega que nunca tiveste coragem de dizer? Este é o sítio. É anónimo. A Comissão lê tudo — e pode partilhar na Gala se achar digno.</div>
+    <div class="justif-label">✍️ A tua sugestão ou mensagem (opcional)</div>
+    <textarea name="sugestao" placeholder="Escreve aqui a tua sugestão, recado ou confissão... (opcional)" style="min-height: 100px;"></textarea>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-section">
+  <div class="submit-warn">
+    ⚠️ <strong>Vota apenas uma vez.</strong> As respostas serão compiladas pela Comissão para definir a shortlist de 3 nomeados por prémio. O vencedor final será decidido por votação ao vivo na Gala.
+  </div>
+  <button type="submit" class="btn-submit">Submeter Votos 🗳️</button>
+</div>
+
+</form>
+
+<!-- SUCCESS SCREEN -->
+<div id="success-screen">
+  <span class="trophy">🏆</span>
+  <h2>Votos Registados!</h2>
+  <p>A tua votação foi submetida com sucesso.<br>Os resultados serão revelados na <strong style="color:var(--gold-lt)">Gala O Gordo Vai À Baliza</strong>.<br><br>Até domingo. 🍖⚽</p>
+</div>
+
+</main>
+
+<script>
+const players = [
+  "Caco Pinto Leite","Afonso João","Pedro Costa","Miguel Carrapatoso",
+  "Eduardo Cary","Martim Giraldes","Nuno Falcão","Nuno Zanatti",
+  "Tomás Eiró","João Eiró","Afonso Teixeira Duarte","Gonçalo Dom",
+  "Ipy Botelho","Manuel Cortes","Pedro \"Pepí\" Grangelo","Zé Corrêa d'Oliveira",
+  "Zé Pignatelli","Diogo Marta","Manuel Bessa","Manuel Moutinho",
+  "Miguel \"Mike V\" Vieira","Tommy Azcue","Joaquim Pedro \"PP\" Quintela",
+  "João Pedro \"JPD\" Duarte","Pedro \"Pepas\" Cortes"
+];
+
+const selections = {};
+
+// Build player grids
+document.querySelectorAll('.players-grid').forEach(grid => {
+  const award = grid.dataset.award;
+  const max   = parseInt(grid.dataset.max);
+  const theme = grid.dataset.theme;
+  selections[award] = [];
+
+  players.forEach(name => {
+    const label = document.createElement('label');
+    label.className = 'player-check';
+    label.innerHTML = `
+      <input type="checkbox" name="vote_${award}" value="${name}"/>
+      <div class="check-box">✓</div>
+      <span class="check-name">${name}</span>
+    `;
+    const cb = label.querySelector('input');
+    cb.addEventListener('change', () => {
+      if (cb.checked) {
+        if (selections[award].length >= max) {
+          cb.checked = false;
+          return;
+        }
+        selections[award].push(name);
+        label.classList.add('selected');
+        if (theme === 'red') label.classList.add('red-theme');
+      } else {
+        selections[award] = selections[award].filter(n => n !== name);
+        label.classList.remove('selected', 'red-theme');
+      }
+      updateProgress();
+    });
+    grid.appendChild(label);
+  });
+});
+
+// Progress bar
+function updateProgress() {
+  let filled = 0;
+  for (let i = 1; i <= 14; i++) {
+    if (selections[i] && selections[i].length > 0) filled++;
+  }
+  const pct = Math.round((filled / 14) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${filled} / 14 preenchidos`;
+}
+updateProgress();
+
+// ── EmailJS config ─────────────────────────────────────────────────────────
+// SETUP (one-time, 2 minutes):
+// 1. Go to https://www.emailjs.com and create a free account
+// 2. Add a service: "Email Services" → Gmail → connect eduardolcary@gmail.com
+//    Copy the Service ID and paste below as EMAILJS_SERVICE_ID
+// 3. Create a template: "Email Templates" → New Template
+//    Set To Email: eduardolcary@gmail.com
+//    Set Subject: Votação Gala - {{voter_name}}
+//    Set Body: {{{votes_body}}}   ← triple braces to allow line breaks
+//    Copy the Template ID and paste below as EMAILJS_TEMPLATE_ID
+// 4. Go to Account → API Keys, copy Public Key → paste below as EMAILJS_PUBLIC_KEY
+const EMAILJS_SERVICE_ID  = "service_a825bbs";
+const EMAILJS_TEMPLATE_ID = "template_o44w0ie";
+const EMAILJS_PUBLIC_KEY  = "-x2t5MM0sANGZTA9B";
+
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+// Award names for readable email
+const awardNames = {
+  1:  "Prémio Buffon — Melhor Guarda-Redes",
+  2:  "Prémio Maldini — Melhor Defesa",
+  3:  "Prémio Xavi — Melhor Passador / Mais Criativo",
+  4:  "Prémio Haaland — Melhor Marcador",
+  5:  "Prémio Kanté — Mais Trabalhador",
+  6:  "Prémio Gerrard — Melhor Capitão / Líder",
+  7:  "Prémio Pirlo — O Mais Elegante",
+  8:  "Prémio Neymar — Melhor Actor de Lesões",
+  9:  "Prémio Balotelli — Mais Imprevisível",
+  10: "Prémio Ramos — Mais Agressivo / Mais Cartões",
+  11: "Prémio Robben — Mais Previsível",
+  12: "Prémio Pogba — Rei das Desculpas",
+  13: "Prémio Sinama Pongolle — Mais Remates, Menos Golos",
+  14: "Prémio Mourinho — Melhor Reclamador"
+};
+
+// Submit
+document.getElementById('votingForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const btn = document.querySelector('.btn-submit');
+
+  // Ask for voter name
+  const voterName = prompt("O teu nome (para identificar a tua votação):");
+  if (!voterName || !voterName.trim()) {
+    alert("Por favor introduz o teu nome para submeter.");
+    return;
+  }
+
+  // Build readable email body
+  let body = `VOTAÇÃO — GALA O GORDO VAI À BALIZA\n`;
+  body += `Votante: ${voterName.trim()}\n`;
+  body += `Data: ${new Date().toLocaleString('pt-PT')}\n`;
+  body += `${'─'.repeat(50)}\n\n`;
+
+  for (let i = 1; i <= 14; i++) {
+    const votos = selections[i] || [];
+    const just  = document.querySelector(`[name="just_${i}"]`).value.trim();
+    body += `${awardNames[i]}\n`;
+    body += `  Nomeados: ${votos.length > 0 ? votos.join(', ') : '(sem voto)'}\n`;
+    body += `  Justificação: ${just || '(sem justificação)'}\n\n`;
+  }
+
+  const sugestao = document.querySelector('[name="sugestao"]').value.trim();
+  if (sugestao) {
+    body += `${'─'.repeat(50)}\n`;
+    body += `SUGESTÃO / MENSAGEM\n${sugestao}\n`;
+  }
+
+  // Show loading state
+  btn.textContent = 'A enviar... ⏳';
+  btn.disabled = true;
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      voter_name: voterName.trim(),
+      votes_body: body
+    });
+
+    // Show success
+    document.getElementById('votingForm').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    console.error('EmailJS error:', err);
+    alert('Erro ao enviar a votação. Verifica a tua ligação e tenta novamente.\n\nDetalhe: ' + JSON.stringify(err));
+    btn.textContent = 'Submeter Votos 🗳️';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
